@@ -1,0 +1,7 @@
+@VideoManagerServer_HostAddress = http://localhost:5271
+
+GET {{VideoManagerServer_HostAddress}}/weatherforecast/
+POST {{VideoManagerServer_HostAddress}}/repository
+Accept: application/json
+
+###
