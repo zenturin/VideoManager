@@ -1,3 +1,5 @@
+using VideoManager;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<GlobalState>();
 var app = builder.Build();
 app.MapControllers();
+var globalState = app.Services.GetRequiredService<GlobalState>();
+globalState.Repo = await VideoRepository.CreateAsync();
 
 
 // Configure the HTTP request pipeline.

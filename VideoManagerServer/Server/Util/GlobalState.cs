@@ -12,7 +12,7 @@ public class GlobalState
         set
         {
             if (value == null) return;
-            this.Repo = new VideoRepository(value);
+            this.Repo.Path = value;
         }
     }
 

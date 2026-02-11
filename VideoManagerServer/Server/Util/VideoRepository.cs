@@ -5,30 +5,29 @@ namespace VideoManager
 {
     public class VideoRepository
     {
-        public string Path {
+        public string? Path {
             get
             {
-                return _path;
+                return this._path;
             }
-            protected set
+            set
             {
-                _path = value;
+                this._path = value;
+                this.Videos = [];
             }
 
         }
-        private string _path;
+        private string? _path;
         public Video[] Videos;
-        public VideoRepository(string path)
+        protected VideoRepository(string? path = null)
         {
-            // TODO: Add error handling
-            // ! Doesnt check for null path
-            // ! Doesnt check if directory exists
             _path = path;
             this.Videos = [];
+            if (_path == null) return;
             Load();
         }
 
-        public static async Task<VideoRepository> CreateAsync(string path)
+        public static async Task<VideoRepository> CreateAsync(string? path = null)
         {
             var repo = new VideoRepository(path);
             await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official);
