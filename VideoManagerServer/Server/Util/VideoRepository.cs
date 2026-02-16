@@ -62,6 +62,34 @@ namespace VideoManager
             }
             return files.Length;
         }
+
+        public async Task<decimal> GetTotalSizeOfRepository()
+        {
+            decimal totalSpace = 0;
+            foreach (Video video in this.Videos)
+            {
+                totalSpace += await video.Space();
+            }
+            return totalSpace;
+        }
+
+        public async Task<Dictionary<string,string>> Summary()
+        {
+            Dictionary<string,string> summary = [];
+            summary.Add(
+                "Size",
+                (await GetTotalSizeOfRepository()).ToString()
+                );
+            summary.Add(
+                "Total Videos",
+                (await GetTotalNumberOfVideos()).ToString()
+                );
+            summary.Add(
+                "Path",
+                this.Path ??= "None"
+            );
+            return summary;
+        }
     }
 }
 

@@ -17,5 +17,6 @@
     <Using Include="Xunit" />
     <Content Include="UnitTest1.cs" />
     <Content Include="ServerApiTests.cs" />
+    <Content Include="VideoManagerTests.cs" />
   </ItemGroup>
 </Project>

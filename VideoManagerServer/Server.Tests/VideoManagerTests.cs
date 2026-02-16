@@ -17,4 +17,10 @@ public class VideoManagerTests
         var repo = await VideoRepository.CreateAsync("D:/Videos");
         Assert.Equal("D:/Videos",repo.Path);
     }
+    [Fact]
+    public async Task GetTotalSpaceRepositoryRetursAValue()
+    {
+        var repo = await VideoRepository.CreateAsync("D:/Videos");
+        Assert.IsType<decimal>(await repo.GetTotalSizeOfRepository());
+    }
 }

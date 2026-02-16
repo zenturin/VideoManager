@@ -1,4 +1,5 @@
 using System.Runtime.ExceptionServices;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 
@@ -17,13 +18,8 @@ public class RepositoryController : ControllerBase
     public async Task<string> Get()
     {
         if (_state.Repo == null) return "Select a repository first";
-        return (await _state.Repo.GetTotalNumberOfVideos()).ToString();
-    }
-
-    [HttpGet("{id}")]
-    public string GetById(int id)
-    {
-        return $"You sent {id}";
+        return JsonSerializer.Serialize(await _state.Repo.Summary());
+        // return (await _state.Repo.GetTotalNumberOfVideos()).ToString();
     }
     [HttpPost]
     public IActionResult Set([FromBody] PathRequest request)
@@ -32,6 +28,7 @@ public class RepositoryController : ControllerBase
         _state.RepositoryPath = request.Path;
         return Ok();
     }
+    
 }
 
 
