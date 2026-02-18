@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 type Props = {
-    onSend: (value: object) => void;
+    onSend: (value: Record<string,unknown>) => void;
 }
 
 export default function FolderSearch ({onSend} : Props) {
@@ -9,6 +9,7 @@ export default function FolderSearch ({onSend} : Props) {
 
     
     async function handleSearch() {
+        // Post request to tell server what directory to look at
         try {
             const serverResponse : Response = await fetch("http://localhost:5271/repository",{
                 method: "POST",
@@ -21,7 +22,18 @@ export default function FolderSearch ({onSend} : Props) {
             })
             const data = serverResponse;
             console.log("Success", data)
-            onSend(serverResponse)
+        } catch (error){
+            console.log("Error: ", error)
+        }
+
+        try {
+            const serverResponse : Response = await fetch("http://localhost:5271/repository",{
+                method: "GET"
+            })
+            const data = await serverResponse.json()
+            console.log("DATA")
+            console.log(data)
+            onSend(data)
         } catch (error){
             console.log("Error: ", error)
         }

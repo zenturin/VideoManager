@@ -1,4 +1,6 @@
 
+using Microsoft.VisualBasic;
+using Xabe.FFmpeg;
 using Xabe.FFmpeg.Downloader;
 
 namespace VideoManager
@@ -30,7 +32,9 @@ namespace VideoManager
         public static async Task<VideoRepository> CreateAsync(string? path = null)
         {
             var repo = new VideoRepository(path);
+            FileSystem.ChDir(AppContext.BaseDirectory);
             await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official);
+            FFmpeg.SetExecutablesPath(AppContext.BaseDirectory + "");
             return repo;
         }
 
@@ -69,6 +73,7 @@ namespace VideoManager
             foreach (Video video in this.Videos)
             {
                 totalSpace += await video.Space();
+                Console.WriteLine(await video.Space());
             }
             return totalSpace;
         }

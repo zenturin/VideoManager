@@ -19,8 +19,8 @@ builder.Services.AddCors(options =>
     });
 });
 var app = builder.Build();
-app.MapControllers();
 app.UseCors("AllowVite");
+app.MapControllers();
 var globalState = app.Services.GetRequiredService<GlobalState>();
 globalState.Repo = await VideoRepository.CreateAsync();
 

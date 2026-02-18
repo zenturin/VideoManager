@@ -26,6 +26,7 @@ public class RepositoryController : ControllerBase
     {
         Console.WriteLine(request.Path);
         _state.RepositoryPath = request.Path;
+        _state.Repo.Load();
         return Ok();
     }
     
