@@ -69,13 +69,18 @@ namespace VideoManager
 
         public async Task<decimal> GetTotalSizeOfRepository()
         {
-            decimal totalSpace = 0;
-            foreach (Video video in this.Videos)
+            string[] files = [];
+            files = Directory.GetFiles(this.Path);
+            foreach (string dir in Directory.GetDirectories(this.Path))
             {
-                totalSpace += await video.Space();
-                Console.WriteLine(await video.Space());
+                files = files.Concat(Directory.GetFiles(dir)).ToArray();
             }
-            return totalSpace;
+            return files.Sum(file =>
+            {
+                if ( !File.Exists(file) ) return 0;
+                FileInfo fileInfo = new FileInfo(file);
+                return fileInfo.Length;
+            });
         }
 
         public async Task<Dictionary<string,string>> Summary()
