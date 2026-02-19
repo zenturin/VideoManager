@@ -10,7 +10,6 @@ function App() {
   return (
     <>
       <div className='manager-container'>
-        <h1> Video Manager </h1>
         <VideoManager></VideoManager>
       </div>
     </>
