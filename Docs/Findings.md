@@ -1,0 +1,3 @@
+## Video indexing and Operations can be very expensive
+
+Upon testing the reporting of the space used by the repository I found that the time to go through each file and get the size was way too extensive. In the range of around 5 mins+. This was a relatively easy fix by switching to manually getting the file size rather than using FFmpeg MediaInfo. This problem is likely due to loading all of the MediaInfo objects into memory. This is still something that needs to be fixed as the MediaInfo will likely be needed for more accurate metrics however as a temporary fix the repository space function has been changed to check each file manually rather than using the MediaInfo.
