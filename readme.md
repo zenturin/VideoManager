@@ -15,6 +15,10 @@ The aim of this project is to create a Video Management Web interface that can b
 - Provide graphs and visuals based on repository metrics
 - Organise video files automatically based on different preferences
 
+### Docs
+
+There is a Docs directory in this repository that contains any and all noteworthy information on progress, findings and goals.
+
 ### Caution
 
 This project only aims to be used on LAN and not to be exposed to the internet as such I would **HIGHLY** advise against doing so.
