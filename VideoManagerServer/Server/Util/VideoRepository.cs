@@ -83,6 +83,13 @@ namespace VideoManager
             });
         }
 
+        public async Task<RepoFolder> GetDirectoryTree(string path)
+        {
+            
+            RepoFolder Tree = new RepoFolder(path);
+            return Tree;
+        }
+
         public async Task<Dictionary<string,string>> Summary()
         {
             Dictionary<string,string> summary = [];

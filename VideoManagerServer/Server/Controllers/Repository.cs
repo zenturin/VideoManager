@@ -17,7 +17,7 @@ public class RepositoryController : ControllerBase
     [HttpGet]
     public async Task<string> Get()
     {
-        if (_state.Repo == null) return "Select a repository first";
+        if (_state.Repo == null || _state.Repo.Path == null) return "Select a repository first";
         return JsonSerializer.Serialize(await _state.Repo.Summary());
         // return (await _state.Repo.GetTotalNumberOfVideos()).ToString();
     }
@@ -28,6 +28,14 @@ public class RepositoryController : ControllerBase
         _state.RepositoryPath = request.Path;
         _state.Repo.Load();
         return Ok();
+    }
+    [HttpGet("tree")]
+    public async Task<string> GetTree()
+    {
+        if (_state.Repo == null || _state.Repo.Path == null) return "Select a repository first";
+        RepoFolder tree = await _state.Repo.GetDirectoryTree(_state.Repo.Path);
+        return JsonSerializer.Serialize(tree, new JsonSerializerOptions{WriteIndented = true});
+
     }
     
 }
