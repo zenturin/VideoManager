@@ -1,0 +1,21 @@
+.file-browser {
+
+}
+
+.tile-container {
+    height: 50%;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(120px,1fr));
+    gap: 12px;
+    padding: 12px;
+    overflow-x: hidden;
+}
+
+.tile {
+    background-color: rgb(109, 109, 109);
+    border-radius: 8px;
+    padding: 2px;
+    text-align: center;
+    font-size: small;
+}

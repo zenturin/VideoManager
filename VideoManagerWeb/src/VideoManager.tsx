@@ -1,23 +1,23 @@
 import { useState, type BlockquoteHTMLAttributes } from 'react'
 import FolderSearch from './FolderSearch'
 import RepoBreakdown from './repoBreakdown'
+import FileBrowser from './FileBrowser'
 
 export default VideoManager
 
 function VideoManager() {
     const [repoState,setRepoState] = useState<Record<string,unknown> | null>(null)
-    console.log("RepoState")
-    console.log(repoState)
-
+    let fileBrowser = null
+    if (repoState != null) {
+        fileBrowser = (<FileBrowser state={repoState}></FileBrowser>)
+    }
     return (
         <div className='panel'>
             <div className='top-bar'>
                 <h1>Video Manager</h1>
             </div>
             <div className='manager-interface'>
-                <div>
-                    browser
-                </div>
+                {fileBrowser}
                 <div>
                     <FolderSearch onSend={setRepoState}></FolderSearch>
                     <h3>Report</h3>

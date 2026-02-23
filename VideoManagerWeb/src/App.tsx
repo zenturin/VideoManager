@@ -5,7 +5,6 @@ import './App.css'
 import VideoManager from './VideoManager'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
