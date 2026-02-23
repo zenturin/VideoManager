@@ -18,4 +18,5 @@
     padding: 2px;
     text-align: center;
     font-size: small;
+    pointer-events:visibleFill;
 }

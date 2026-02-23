@@ -14,7 +14,8 @@ type item = {
 type TileProps = {
     name: string,
     path:string,
-    imgsrc:string | undefined
+    imgsrc:string | undefined,
+    onClick: (name:string,path:string) => void
 }
 
 
@@ -51,7 +52,7 @@ class TreeFile{
 
 function FileBrowser({state} : Props){
     const [tree,setTree] = useState<TreeFolder>(new TreeFolder("","",[],[]))
-    const [currentDir,setCurrentDir] = useState<string>()
+    const [currentFolder,setCurrentFolder] = useState<TreeFolder | null>(null)
 
     async function getTree(){
         try {
@@ -60,46 +61,63 @@ function FileBrowser({state} : Props){
             })
             const data = await serverResponse.json()
             setTree(TreeFolder.fromJson(data))
-            setCurrentDir(tree?.path)
+            setCurrentFolder(TreeFolder.fromJson(data))
         } catch (error){
             console.log("Error: ", error)
             return (<p>error</p>)
         }
     }
 
+    function findFolder (startFolder:TreeFolder, path : string) : TreeFolder | null {
+        let folder : TreeFolder | null = null
+        if (startFolder.path == path) return startFolder;
+        return startFolder.Folders.find((f) => findFolder(f,path)) ?? null
+    }
+
+    function tileClickedCallback (name: string, path: string) {
+        console.log("clicked : " + name )
+        setCurrentFolder(findFolder(tree,path))
+    }
+
     useEffect(() => {
         getTree();
     },[state])
 
+    if (currentFolder == null) setCurrentFolder(tree);
+    if (currentFolder == null) return
+
     return (
     <div className="file-browser">
         <h3>File Browser</h3>
-        <p>Current Directory : {currentDir}</p>
-        {TileGrid(tree)}
+        <button onClick={e => {setCurrentFolder(tree)}}>Home</button>
+        <p>Current Directory : {currentFolder.path}</p>
+        {TileGrid(currentFolder,tileClickedCallback)}
     </div>
     )
 }
 
-function Tile ({name,path,imgsrc} : TileProps){
+function Tile ({name,path,imgsrc,onClick} : TileProps){
     if (imgsrc == undefined) imgsrc = loaderImg
-
+    function tileSelected () {
+        onClick(name,path)
+    }
     return (
-    <div key={path} className="tile">
+    <div key={path} className="tile" onClick={() => tileSelected()}>
         <img src={imgsrc}></img>
         <p>{name}</p>
     </div>
     )
 }
-function TileGrid (folder : TreeFolder){
+function TileGrid (folder : TreeFolder, tileClicked : (name:string,path:string) => void){
     let tiles = []
     // Folders
     tiles = folder.Folders.map(
         (f : TreeFolder) => {
-        return <Tile name={f.name} path={f.path} imgsrc={folderImg}></Tile>
+        return <Tile name={f.name} path={f.path} imgsrc={folderImg} onClick={tileClicked}></Tile>
     })
     tiles = tiles.concat(folder.Files.map(
         (f : TreeFile) => {
-            return <Tile name={f.name} path={f.path} imgsrc={undefined}></Tile>
+            return <Tile name={f.name} path={f.path} imgsrc={undefined} onClick={tileClicked}></Tile>
         }
     ))
     return <div className="tile-container">
