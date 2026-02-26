@@ -109,9 +109,17 @@ namespace VideoManager
             return summary;
         }
 
-        public async Task<Dictionary<string,string>> GetVideoInfo(string path)
+        public async Task<Dictionary<string,string>?> GetVideoInfo(string path)
         {
-            MediaInfo? rawInfo = await this.Videos.First((video) => video.Path.Replace("\\","/") == path).Info();
+            MediaInfo? rawInfo;
+            try
+            {
+                rawInfo = await this.Videos.First((video) => video.Path.Replace("\\","/") == path).Info();
+            }catch (System.InvalidOperationException e)
+            {
+                return null;
+            }
+            
             Dictionary<string,string> info = [];
             info.Add("size",rawInfo.Size.ToString());
             info.Add("duration",rawInfo.Duration.ToString());

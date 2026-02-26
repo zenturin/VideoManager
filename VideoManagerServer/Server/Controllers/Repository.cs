@@ -42,6 +42,9 @@ public class RepositoryController : ControllerBase
     public async Task<string> GetVideoFile(string filePath)
     {
         Console.WriteLine(filePath);
+        if (_state.Repo == null || _state.Repo.Path == null) return "";
+        Dictionary<string,string>? videoInfo = await _state.Repo.GetVideoInfo(filePath);
+        if (videoInfo == null) return "";
         return JsonSerializer.Serialize( await _state.Repo.GetVideoInfo(filePath),new JsonSerializerOptions{WriteIndented = true});
     }
     
