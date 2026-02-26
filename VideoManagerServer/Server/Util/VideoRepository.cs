@@ -1,4 +1,5 @@
 
+using System.Drawing;
 using Microsoft.VisualBasic;
 using Xabe.FFmpeg;
 using Xabe.FFmpeg.Downloader;
@@ -106,6 +107,16 @@ namespace VideoManager
                 this.Path ??= "None"
             );
             return summary;
+        }
+
+        public async Task<Dictionary<string,string>> GetVideoInfo(string path)
+        {
+            MediaInfo? rawInfo = await this.Videos.First((video) => video.Path.Replace("\\","/") == path).Info();
+            Dictionary<string,string> info = [];
+            info.Add("size",rawInfo.Size.ToString());
+            info.Add("duration",rawInfo.Duration.ToString());
+            info.Add("creation-date",rawInfo.CreationTime.ToString());
+            return info;
         }
     }
 }

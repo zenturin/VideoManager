@@ -37,6 +37,13 @@ public class RepositoryController : ControllerBase
         return JsonSerializer.Serialize(tree, new JsonSerializerOptions{WriteIndented = true});
 
     }
+
+    [HttpGet("video/{*filePath}")]
+    public async Task<string> GetVideoFile(string filePath)
+    {
+        Console.WriteLine(filePath);
+        return JsonSerializer.Serialize( await _state.Repo.GetVideoInfo(filePath),new JsonSerializerOptions{WriteIndented = true});
+    }
     
 }
 

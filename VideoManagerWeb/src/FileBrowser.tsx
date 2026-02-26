@@ -6,6 +6,7 @@ export default FileBrowser
 
 type Props = {
     state: Record<string,unknown>;
+    onVideoSelected: (value: string) => void;
 }
 type item = {
     name: string,
@@ -50,7 +51,7 @@ class TreeFile{
     }
 }
 
-function FileBrowser({state} : Props){
+function FileBrowser({state,onVideoSelected} : Props){
     const [tree,setTree] = useState<TreeFolder>(new TreeFolder("","",[],[]))
     const [previousFolderStack, setPreviousFolderStack] = useState<TreeFolder[]>([])
 
@@ -76,6 +77,11 @@ function FileBrowser({state} : Props){
 
     function tileClickedCallback (name: string, path: string) {
         console.log("clicked : " + name )
+        const file = findFolder(tree,path)
+        if (file == null) {
+            onVideoSelected(path)
+            return;
+        }
         setPreviousFolderStack(previousFolderStack.concat([findFolder(tree,path) ?? tree]))
     }
 
