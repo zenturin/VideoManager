@@ -52,7 +52,7 @@ class TreeFile{
 
 function FileBrowser({state} : Props){
     const [tree,setTree] = useState<TreeFolder>(new TreeFolder("","",[],[]))
-    const [currentFolder,setCurrentFolder] = useState<TreeFolder | null>(null)
+    const [previousFolderStack, setPreviousFolderStack] = useState<TreeFolder[]>([])
 
     async function getTree(){
         try {
@@ -61,7 +61,7 @@ function FileBrowser({state} : Props){
             })
             const data = await serverResponse.json()
             setTree(TreeFolder.fromJson(data))
-            setCurrentFolder(TreeFolder.fromJson(data))
+            setPreviousFolderStack([TreeFolder.fromJson(data)])
         } catch (error){
             console.log("Error: ", error)
             return (<p>error</p>)
@@ -76,22 +76,24 @@ function FileBrowser({state} : Props){
 
     function tileClickedCallback (name: string, path: string) {
         console.log("clicked : " + name )
-        setCurrentFolder(findFolder(tree,path))
+        setPreviousFolderStack(previousFolderStack.concat([findFolder(tree,path) ?? tree]))
     }
 
     useEffect(() => {
         getTree();
     },[state])
 
-    if (currentFolder == null) setCurrentFolder(tree);
-    if (currentFolder == null) return
-
+    if (previousFolderStack.length == 0) {
+        setPreviousFolderStack([tree])
+        return
+    }
     return (
     <div className="file-browser">
         <h3>File Browser</h3>
-        <button onClick={e => {setCurrentFolder(tree)}}>Home</button>
-        <p>Current Directory : {currentFolder.path}</p>
-        {TileGrid(currentFolder,tileClickedCallback)}
+        <button onClick={e => {setPreviousFolderStack([tree])}}>Home</button>
+        <button onClick={e => {setPreviousFolderStack(previousFolderStack.slice(0,-2))}}>Back</button>
+        <p>Current Directory : {previousFolderStack[previousFolderStack.length-1].path}</p>
+        {TileGrid(previousFolderStack[previousFolderStack.length-1],tileClickedCallback)}
     </div>
     )
 }
