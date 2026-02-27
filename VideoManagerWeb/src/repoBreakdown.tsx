@@ -21,7 +21,7 @@ function RepoBreakdown ({repoInfo,currentVideo} : Props) {
                         size = size / 1000
                         count +=1
                     }
-                    size = Math.round(size * 100) /100
+                    size = Math.round(size * 100) / 100
                     return (<li key={key}>{key + " : " + size + units[count] }</li>)
                 }
             }

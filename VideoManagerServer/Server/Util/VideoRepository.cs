@@ -121,6 +121,7 @@ namespace VideoManager
             }
             
             Dictionary<string,string> info = [];
+            info.Add("name",path.Split("/").Last());
             info.Add("size",rawInfo.Size.ToString());
             info.Add("duration",rawInfo.Duration.ToString());
             info.Add("creation-date",rawInfo.CreationTime.ToString());
