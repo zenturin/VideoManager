@@ -14,7 +14,7 @@ public class RepoFolder : RepoItem
     public RepoFolder(string path)
     {
         this.path = path;
-        this.name = path.Split('/').Last();
+        this.name = path.Split(['/','\\']).Last();
         this.Folders = [];
         this.Files = [];
         getChildren();
@@ -24,13 +24,13 @@ public class RepoFolder : RepoItem
         path ??= this.path;
         foreach (string dir in Directory.GetDirectories(path))
         {
-            string name = dir.Split('/').Last();
+            string name = dir.Split(['/','\\']).Last();
             this.Folders.Add(new RepoFolder(dir));
         }
 
         foreach (string file in Directory.GetFiles(path))
         {
-            string name = file.Split('/').Last();
+            string name = file.Split(['/','\\']).Last();
             this.Files.Add(new RepoFile(file));
         }
     }
@@ -43,6 +43,6 @@ public class RepoFile : RepoItem
     public RepoFile(string path)
     {
         this.path = path;
-        this.name = path.Split('/').Last();
+        this.name = path.Split(['/','\\']).Last();
     }
 }
