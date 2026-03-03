@@ -6,12 +6,10 @@ public class GlobalState
     {
         get
         {
-            if (Repo == null) return null;
             return Repo.Path;
         }
         set
         {
-            if (value == null) return;
             this.Repo.Path = value;
         }
     }
