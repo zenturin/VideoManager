@@ -1,11 +1,13 @@
 
 using System.Drawing;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.VisualBasic;
 using Xabe.FFmpeg;
 using Xabe.FFmpeg.Downloader;
 
 namespace VideoManager
 {
+
     public class VideoRepository
     {
         public string? Path {
@@ -72,6 +74,7 @@ namespace VideoManager
         {
             string[] files = [];
             files = Directory.GetFiles(this.Path);
+            
             foreach (string dir in Directory.GetDirectories(this.Path))
             {
                 files = files.Concat(Directory.GetFiles(dir)).ToArray();
@@ -109,23 +112,55 @@ namespace VideoManager
             return summary;
         }
 
-        public async Task<Dictionary<string,string>?> GetVideoInfo(string path)
+        public async Task<VideoInfo> GetVideoInfo(string path)
         {
             MediaInfo? rawInfo;
+            Video? video;
             try
             {
-                rawInfo = await this.Videos.First((video) => video.Path.Replace("\\","/") == path).Info();
+                video = this.Videos.First((video) => video.Path.Replace("\\","/") == path);
+                rawInfo = await video.Info();
             }catch (System.InvalidOperationException e)
             {
                 return null;
             }
-            
-            Dictionary<string,string> info = [];
-            info.Add("name",path.Split("/").Last());
-            info.Add("size",rawInfo.Size.ToString());
-            info.Add("duration",rawInfo.Duration.ToString());
-            info.Add("creation-date",rawInfo.CreationTime.ToString());
+
+            VideoInfo info = new VideoInfo(
+                path.Split("/").Last(),
+                rawInfo.Size.ToString(),
+                rawInfo.Duration.ToString(),
+                rawInfo.CreationTime.ToString()
+            );
             return info;
+        }
+
+        public async Task<Video> GetVideo(string path)
+        {
+            Video? video;
+            try
+            {
+                video = this.Videos.First((video) => video.Path.Replace("\\","/") == path);
+            }catch (System.InvalidOperationException e)
+            {
+                return null;
+            }
+            return video;
+        }
+    }
+
+    public class VideoInfo
+    {
+        public string name {get;set;}
+        public string size {get;set;}
+        public string duration {get;set;}
+        public string creationDate {get;set;}
+
+        public VideoInfo (string name,string size,string duration,string creationDate)
+        {
+            this.name = name;
+            this.size = size;
+            this.duration = duration;
+            this.creationDate = creationDate;
         }
     }
 }
