@@ -20,3 +20,17 @@
     font-size: small;
     pointer-events:visibleFill;
 }
+
+.tile:hover {
+    background-color:  rgb(129, 129, 129);
+    border: 2px;
+    border-style: dashed;
+    padding: 0px;
+}
+
+.tile:active {
+    background-color: rgb(156, 155, 155);
+    border: 2px;
+    border-style: solid;
+    padding: 0px;
+}

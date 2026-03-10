@@ -16,7 +16,7 @@ body {
 }
 
 .manager-container {
-  height: 70vh;
+  height: 80%;
   width: 100%;
   align-items: center;
   display: flex;
@@ -50,6 +50,7 @@ body {
   background-color: rgb(67, 67, 67);
   margin: 10px;
   margin-top: 0px;
+  border-radius: 10px;
 }
 .top-bar {
   display: flex;
