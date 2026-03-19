@@ -9,6 +9,6 @@
 
 ## QOL
 - [ ] Readable UI
-- [ ] Video Thumbnails
+- [x] Video Thumbnails
 - [ ] shorten names
 - [ ] add file types
