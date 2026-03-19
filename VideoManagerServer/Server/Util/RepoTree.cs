@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 
 public class RepoItem
@@ -30,8 +31,11 @@ public class RepoFolder : RepoItem
 
         foreach (string file in Directory.GetFiles(path))
         {
+            
             string name = file.Split(['/','\\']).Last();
-            this.Files.Add(new RepoFile(file));
+            var selectedFile = new RepoFile(file);
+            if (!selectedFile.IsVideo()) continue;
+            this.Files.Add(selectedFile);
         }
     }
 }
@@ -44,5 +48,53 @@ public class RepoFile : RepoItem
     {
         this.path = path;
         this.name = path.Split(['/','\\']).Last();
+    }
+
+    public bool IsVideo()
+    {
+        return HasMoov();
+    }
+
+    protected bool HasMoov()
+    {
+        var head = ReadHeader(512*1024);
+        var tail = ReadTail(512*1024);
+
+        var headText = System.Text.Encoding.ASCII.GetString(head);
+        var tailText = System.Text.Encoding.ASCII.GetString(tail);
+
+        return headText.Contains("moov") || tailText.Contains("moov");
+    }
+
+    protected byte[] ReadHeader(int size = 4096)
+    {
+        using var fs = new FileStream(path,FileMode.Open,FileAccess.Read);
+
+        byte[] buffer = new byte[size];
+        int bytesRead = fs.Read(buffer,0,size);
+
+        if (bytesRead < size)
+        {
+            Array.Resize(ref buffer, bytesRead);
+        }
+
+        return buffer;
+    }
+
+    protected byte[] ReadTail(int size = 4096)
+    {
+        using var fs = new FileStream(path, FileMode.Open,FileAccess.Read);
+
+        if (fs.Length < size)
+        {
+            size = (int)fs.Length;
+        }
+
+        fs.Seek(-size, SeekOrigin.End);
+
+        byte[] buffer = new byte[size];
+        fs.Read(buffer,0,size);
+
+        return buffer;
     }
 }

@@ -10,6 +10,7 @@
     <Content Include="Program.cs" />
     <Content Include="Controllers\Repository.cs" />
     <Content Include="Util\GlobalState.cs" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="Xabe.FFmpeg" Version="6.0.2" />
     <PackageReference Include="Xabe.FFmpeg.Downloader" Version="6.0.2" />
     <Content Include=".gitignore" />

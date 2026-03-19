@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import './FileBrowser.css'
 import loaderImg from "./assets/loader.svg"
 import folderImg from "./assets/folder.svg"
@@ -111,7 +112,7 @@ function Tile ({name,path,imgsrc,onClick} : TileProps){
     }
     return (
     <div key={path} className="tile" onClick={() => tileSelected()}>
-        <img src={imgsrc}></img>
+        {LazyImage(imgsrc)}
         <p>{name}</p>
     </div>
     )
@@ -125,10 +126,33 @@ function TileGrid (folder : TreeFolder, tileClicked : (name:string,path:string) 
     })
     tiles = tiles.concat(folder.Files.map(
         (f : TreeFile) => {
-            return <Tile name={f.name} path={f.path} imgsrc={undefined} onClick={tileClicked}></Tile>
+            return <Tile name={f.name} path={f.path} imgsrc={"http://localhost:5271/repository/thumbnail/" + f.path} onClick={tileClicked}></Tile>
         }
     ))
     return <div className="tile-container">
         {tiles}
     </div>
 }
+
+function LazyImage(src : string) {
+    const { ref, inView } = useInView({
+        triggerOnce: true,
+        rootMargin: "200px 0px",
+    });
+
+    return (
+        <div
+        ref={ref}
+        style={{
+            position: "relative",
+        }}
+        >
+        {inView ? (
+            <img
+            src={src}
+            style={{ width: "100%", height: "100%" }}
+            />
+        ) : null}
+        </div>
+    );
+    };
