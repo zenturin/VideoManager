@@ -3,6 +3,7 @@ import { useInView } from "react-intersection-observer";
 import './FileBrowser.css'
 import loaderImg from "./assets/loader.svg"
 import folderImg from "./assets/folder.svg"
+import FileBrowserToolbar from "./FileBrowserToolbar";
 export default FileBrowser
 
 type Props = {
@@ -97,9 +98,11 @@ function FileBrowser({state,onVideoSelected} : Props){
     return (
     <div className="file-browser">
         <h3>File Browser</h3>
-        <button onClick={e => {setPreviousFolderStack([tree])}}>Home</button>
-        <button onClick={e => {setPreviousFolderStack(previousFolderStack.slice(0,-2))}}>Back</button>
-        <p>Current Directory : {previousFolderStack[previousFolderStack.length-1].path}</p>
+        <FileBrowserToolbar 
+            onHomeClick={() => setPreviousFolderStack([tree])} 
+            onBackClick={() => setPreviousFolderStack(previousFolderStack.slice(0,-2))}
+            currentDir={previousFolderStack[previousFolderStack.length-1].path}
+        ></FileBrowserToolbar>
         {TileGrid(previousFolderStack[previousFolderStack.length-1],tileClickedCallback)}
     </div>
     )

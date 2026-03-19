@@ -1,0 +1,29 @@
+.toolbar {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(116, 116, 116);
+}
+
+.toolbar button {
+    height : 30px;
+    margin: 5px;
+    background-color: rgba(0, 0, 0, 0);
+    border-style: hidden;
+}
+.toolbar button img {
+    height: 100%;
+}
+
+.toolbar button :hover {
+    background-color: gray;
+}
+
+.toolbar p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    align-self: center;
+    border: solid;
+    border-width: 2px;
+    padding: 2px;
+    border-color: rgba(0, 0, 0, 0.36);
+}
