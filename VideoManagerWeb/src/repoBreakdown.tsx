@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./RepoBreakdown.css"
 
 export default RepoBreakdown;
 
@@ -22,10 +23,20 @@ function RepoBreakdown ({repoInfo,currentVideo} : Props) {
                         count +=1
                     }
                     size = Math.round(size * 100) / 100
-                    return (<li key={key}>{key + " : " + size + units[count] }</li>)
+                    return (
+                        <tr>
+                            <th>{key}</th>
+                            <td>{size + units[count]}</td>
+                        </tr>
+                )
                 }
             }
-            return (<li key={key}>{key + " : " + value}</li>)
+            return (
+            <tr>
+                <th>{key}</th>
+                <td>{value}</td>
+            </tr>
+            )
         }
     }
         
@@ -33,10 +44,15 @@ function RepoBreakdown ({repoInfo,currentVideo} : Props) {
     console.log("Info")
     console.log(info)
     return (
-    <div>
-        <h5>Repo Breakdown</h5>
-        <ul>{info}</ul>
-        <VideoBreakdown selectedVideo={currentVideo}></VideoBreakdown>
+    <div className="breakdown">
+        <table>
+            <tr>
+                <th> Repo Breakdown </th>
+                <td> ------ </td>
+            </tr>
+            {info}
+            <VideoBreakdown selectedVideo={currentVideo}></VideoBreakdown>
+        </table>
     </div>
         
     )
@@ -83,20 +99,40 @@ function VideoBreakdown ({selectedVideo} : VideoProps) {
                     count +=1
                 }
                 size = Math.round(size * 100) /100
-                return (<p key={key}>{key + " : " + size + units[count] }</p>)
+                return (
+                    <tr>
+                        <th>{key}</th>
+                        <td>{size + units[count]}</td>
+                    </tr>
+                )
             }
             case "duration": {
-                return (<p key={key}>{key + " : " + String(value).split(".")[0] }</p>)
+                return (
+                    <tr>
+                        <th>{key}</th>
+                        <td>{String(value).split(".")[0]}</td>
+                    </tr>
+                )
             }
         }
-        return <p key={key}>{key + " : " + value}</p>
+        return (
+            <tr>
+                <th>{key}</th>
+                <td>{String(value)}</td>
+            </tr>
+        )
+
     })
 
     return(
-        <div>
-        <h5>INFO</h5>
+        <>
+        <tr>
+            <th> Video Info </th>
+            <td> ----- </td>
+        </tr>
         {info}
-        </div>
+        </>
+
     )
     
     
