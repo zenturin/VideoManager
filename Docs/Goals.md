@@ -8,7 +8,7 @@
 - [x] Browser to change target video with directory tree
 
 ## QOL
-- [ ] Readable UI
+- [x] Readable UI
 - [x] Video Thumbnails
 - [ ] shorten names
 - [ ] add file types
