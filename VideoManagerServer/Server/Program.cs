@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<GlobalState>();
+builder.Services.AddSingleton<Repositories>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowVite",
@@ -23,6 +24,9 @@ app.UseCors("AllowVite");
 app.MapControllers();
 var globalState = app.Services.GetRequiredService<GlobalState>();
 globalState.Repo = await VideoRepository.CreateAsync();
+var repos = app.Services.GetRequiredService<Repositories>();
+repos.LoadState();
+
 
 
 // Configure the HTTP request pipeline.

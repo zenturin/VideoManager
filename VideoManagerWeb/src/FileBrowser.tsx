@@ -7,7 +7,7 @@ import FileBrowserToolbar from "./FileBrowserToolbar";
 export default FileBrowser
 
 type Props = {
-    state: Record<string,unknown>;
+    repoId: number;
     onVideoSelected: (value: string) => void;
 }
 type item = {
@@ -53,16 +53,17 @@ class TreeFile{
     }
 }
 
-function FileBrowser({state,onVideoSelected} : Props){
+function FileBrowser({repoId,onVideoSelected} : Props){
     const [tree,setTree] = useState<TreeFolder>(new TreeFolder("","",[],[]))
     const [previousFolderStack, setPreviousFolderStack] = useState<TreeFolder[]>([])
 
     async function getTree(){
         try {
-            const serverResponse : Response = await fetch("http://localhost:5271/repository/tree",{
+            const serverResponse : Response = await fetch(`http://localhost:5271/repos/${repoId}/tree`,{
                 method: "GET"
             })
             const data = await serverResponse.json()
+            console.log(data)
             setTree(TreeFolder.fromJson(data))
             setPreviousFolderStack([TreeFolder.fromJson(data)])
         } catch (error){
@@ -89,7 +90,7 @@ function FileBrowser({state,onVideoSelected} : Props){
 
     useEffect(() => {
         getTree();
-    },[state])
+    },[])
 
     if (previousFolderStack.length == 0) {
         setPreviousFolderStack([tree])
@@ -103,7 +104,7 @@ function FileBrowser({state,onVideoSelected} : Props){
             onBackClick={() => setPreviousFolderStack(previousFolderStack.slice(0,-2))}
             currentDir={previousFolderStack[previousFolderStack.length-1].path}
         ></FileBrowserToolbar>
-        {TileGrid(previousFolderStack[previousFolderStack.length-1],tileClickedCallback)}
+        {TileGrid(previousFolderStack[previousFolderStack.length-1],tileClickedCallback,repoId)}
     </div>
     )
 }
@@ -120,7 +121,7 @@ function Tile ({name,path,imgsrc,onClick} : TileProps){
     </div>
     )
 }
-function TileGrid (folder : TreeFolder, tileClicked : (name:string,path:string) => void){
+function TileGrid (folder : TreeFolder, tileClicked : (name:string,path:string) => void, repoId:number){
     let tiles = []
     // Folders
     tiles = folder.Folders.map(
@@ -129,7 +130,7 @@ function TileGrid (folder : TreeFolder, tileClicked : (name:string,path:string) 
     })
     tiles = tiles.concat(folder.Files.map(
         (f : TreeFile) => {
-            return <Tile name={f.name} path={f.path} imgsrc={"http://localhost:5271/repository/thumbnail/" + f.path} onClick={tileClicked}></Tile>
+            return <Tile name={f.name} path={f.path} imgsrc={`http://localhost:5271/repos/${repoId}/thumbnail?fileId=${f.path}`} onClick={tileClicked}></Tile>
         }
     ))
     return <div className="tile-container">

@@ -1,15 +1,27 @@
 import { useEffect, useState } from "react";
+import {useApi} from "./ServerWrapper"
 import "./RepoBreakdown.css"
 
 export default RepoBreakdown;
 
 type Props = {
-    repoInfo: Record<string,unknown> | null;
+    repoId: number | null;
     currentVideo: string | null;
 }
 
-function RepoBreakdown ({repoInfo,currentVideo} : Props) {
-    if (repoInfo == null) return <p>No repo selected</p>
+function RepoBreakdown ({repoId,currentVideo} : Props) {
+    if (repoId == null) {
+        return <p>No repo selected</p>
+    }
+        const api = useApi()
+        const [repoInfo,setRepoInfo] = useState<string[]>([])
+    
+        useEffect(() => {
+            const getAllRepoSummary = async () => {
+                setRepoInfo(await api.getAllRepoSummary(repoId))
+            }
+            getAllRepoSummary()
+        },[])
 
     const info = Object.entries(repoInfo).map(([key,value]) => {
         if (typeof value == "string") {
@@ -24,7 +36,7 @@ function RepoBreakdown ({repoInfo,currentVideo} : Props) {
                     }
                     size = Math.round(size * 100) / 100
                     return (
-                        <tr>
+                        <tr key={key}>
                             <th>{key}</th>
                             <td>{size + units[count]}</td>
                         </tr>
@@ -32,7 +44,7 @@ function RepoBreakdown ({repoInfo,currentVideo} : Props) {
                 }
             }
             return (
-            <tr>
+            <tr key={key}>
                 <th>{key}</th>
                 <td>{value}</td>
             </tr>
@@ -46,11 +58,16 @@ function RepoBreakdown ({repoInfo,currentVideo} : Props) {
     return (
     <div className="breakdown">
         <table>
-            <tr>
-                <th> Repo Breakdown </th>
-                <td> ------ </td>
-            </tr>
-            {info}
+            <thead>
+                <tr key={"header"}>
+                    <th> Repo Breakdown </th>
+                    <th> ------ </th>
+                </tr>
+            </thead>
+            <tbody>
+                {info}
+            </tbody>
+            
             <VideoBreakdown selectedVideo={currentVideo}></VideoBreakdown>
         </table>
     </div>

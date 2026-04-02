@@ -24,7 +24,7 @@ namespace VideoManager
         }
         private string? _path;
         public Video[] Videos;
-        protected VideoRepository(string? path = null)
+        public VideoRepository(string? path = null)
         {
             _path = path;
             this.Videos = [];
@@ -139,7 +139,7 @@ namespace VideoManager
             Video? video;
             try
             {
-                video = this.Videos.First((video) => video.Path.Replace("\\","/") == path);
+                video = this.Videos.First((video) => video.Path == path);
             }catch (System.InvalidOperationException e)
             {
                 return null;
