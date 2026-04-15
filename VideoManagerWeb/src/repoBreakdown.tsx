@@ -92,7 +92,7 @@ function VideoBreakdown ({selectedVideo,selectedRepo} : VideoProps) {
             setVideoInfo(await api.getVideoSummary(selectedRepo,selectedVideo))
         }
         getVideoInfo()
-    },[])
+    },[selectedVideo])
 
     if (videoInfo == null) return
     console.log("Video Info")

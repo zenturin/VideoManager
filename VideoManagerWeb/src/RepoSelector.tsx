@@ -15,7 +15,7 @@ export default function RepoSelector ({RepoSelected} : props){
             setRepoList(await api.getAllRepos())
         }
         getRepos()
-    },[])
+    },[RepoSelected])
 
     let tiles: JSX.Element[] = []
     repoList.forEach((repo) => {
