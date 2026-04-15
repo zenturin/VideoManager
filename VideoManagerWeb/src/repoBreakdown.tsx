@@ -68,7 +68,7 @@ function RepoBreakdown ({repoId,currentVideo} : Props) {
                 {info}
             </tbody>
             
-            <VideoBreakdown selectedVideo={currentVideo}></VideoBreakdown>
+            <VideoBreakdown selectedVideo={currentVideo} selectedRepo={repoId}></VideoBreakdown>
         </table>
     </div>
         
@@ -77,29 +77,22 @@ function RepoBreakdown ({repoId,currentVideo} : Props) {
 
 type VideoProps = {
     selectedVideo : string | null
+    selectedRepo : number | null
 }
 
-function VideoBreakdown ({selectedVideo} : VideoProps) {
+function VideoBreakdown ({selectedVideo,selectedRepo} : VideoProps) {
+    if (selectedRepo == null || selectedVideo == null) return (<></>)
     console.log(selectedVideo)
     if (selectedVideo == null) return;
-    const [videoInfo,setVideoInfo] = useState<Record<string,unknown> | null>( null )
-    
-    async function getVideoInfo(path: string){
-        try {
-            const serverResponse : Response = await fetch("http://localhost:5271/repository/video/" + path,{
-                method: "GET"
-            })
-            const data = await serverResponse.json()
-            setVideoInfo(data)
-        } catch (error){
-            console.log("Error: ", error)
-            return (<p>error</p>)
-        }
-    }
+    const api = useApi()
+    const [videoInfo,setVideoInfo] = useState<string[]>([])
 
-    useEffect(()=>{
-        getVideoInfo(selectedVideo)
-    },[selectedVideo])
+    useEffect(() => {
+        const getVideoInfo = async () => {
+            setVideoInfo(await api.getVideoSummary(selectedRepo,selectedVideo))
+        }
+        getVideoInfo()
+    },[])
 
     if (videoInfo == null) return
     console.log("Video Info")

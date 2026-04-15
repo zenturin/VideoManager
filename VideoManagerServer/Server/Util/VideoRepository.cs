@@ -118,7 +118,7 @@ namespace VideoManager
             Video? video;
             try
             {
-                video = this.Videos.First((video) => video.Path.Replace("\\","/") == path);
+                video = this.Videos.First((video) => video.Path == path);
                 rawInfo = await video.Info();
             }catch (System.InvalidOperationException e)
             {

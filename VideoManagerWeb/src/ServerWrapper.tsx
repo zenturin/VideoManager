@@ -66,4 +66,15 @@ export class Server {
         return data
     }
 
+    async getVideoSummary(repoid: number, path : string){
+        const serverResponse : Response = await fetch(`http://${this.IP}:${this.PORT}/repos/${repoid}/videoinfo?path=${path}`,{
+            method: "GET",
+            headers: {
+                "Conent-type": "application/json"
+            }
+        })
+        const data = await serverResponse.json()
+        return data
+    }
+
 }

@@ -32,14 +32,14 @@ public class ReposController : ControllerBase
         return JsonSerializer.Serialize(summary);
     }
 
-    [HttpGet("{repoIdString}/{fileId}/info")]
-    public async Task<string> GetFileInfo(string repoIdString, string fileId)
+    [HttpGet("{repoIdString}/videoinfo")]
+    public async Task<string> GetFileInfo(string repoIdString, [FromQuery]string path)
     {
         int repoId = -1;
         if (!int.TryParse(repoIdString,out repoId)) return "";
         var repo = Repos.repos[repoId];
-        System.Diagnostics.Debug.WriteLine("RepoID: " + repoId + " | " + "FileId: " + fileId);
-        return JsonSerializer.Serialize(await repo.GetVideoInfo(fileId));
+        System.Diagnostics.Debug.WriteLine("RepoID: " + repoId + " | " + "FileId: " + path);
+        return JsonSerializer.Serialize(await repo.GetVideoInfo(path));
     }
     [HttpGet("{repoIdString}/thumbnail")]
     public async Task<FileContentResult> GetFilethumbnail(string repoIdString, [FromQuery] string fileId)
