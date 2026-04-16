@@ -4,6 +4,7 @@ import RepoBreakdown from './repoBreakdown'
 import FileBrowser from './FileBrowser'
 import RepoSelector from './RepoSelector'
 import ApiProvider from './ServerWrapper'
+import RepoGraphs from './RepoGraphs'
 
 export default VideoManager
 
@@ -26,6 +27,7 @@ function VideoManager() {
                         <RepoSelector RepoSelected={setSelectedRepo}></RepoSelector>
                         <h3>Report</h3>
                         <RepoBreakdown repoId={selectedRepo} currentVideo={selectedVideo}></RepoBreakdown>
+                        <RepoGraphs repoId={selectedRepo}></RepoGraphs>
                     </div>
                 </div>
             </div>

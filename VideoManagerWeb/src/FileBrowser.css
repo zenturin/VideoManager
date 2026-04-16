@@ -1,5 +1,6 @@
 .tile-container {
-    height: 50%;
+    max-height: 500px;
+    min-height: 300px;
     overflow-y: auto;
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(120px,1fr));

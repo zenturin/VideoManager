@@ -24,10 +24,12 @@ namespace VideoManager
         {
             try
             {
-                if (_Info == null) _Info = (MediaInfo)await FFmpeg.GetMediaInfo(this.Path);
+                var dir = Path.Replace("\\","/");
+                if (_Info == null) _Info = (MediaInfo)await FFmpeg.GetMediaInfo(dir);
             } catch (System.ArgumentException)
             {
                 Console.WriteLine("Couldn't load" + Path);
+                _Info = null;
             }
             return _Info;
         }

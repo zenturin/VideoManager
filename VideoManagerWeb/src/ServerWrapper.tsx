@@ -1,5 +1,12 @@
 import { useContext,useMemo,createContext, type ReactNode } from "react";
 
+export interface HistogramBucket { Bucket: string; Count: number; }
+export interface RepoGraphData {
+    DurationHistogram: HistogramBucket[];
+    SizeHistogram: HistogramBucket[];
+    YearHistogram: HistogramBucket[];
+}
+
 const ApiContext = createContext<Server | null>(null);
 
 type providerProps = {
@@ -64,6 +71,14 @@ export class Server {
         })
         const data = await serverResponse.json()
         return data
+    }
+
+    async getRepoGraphs(repoId: number): Promise<RepoGraphData> {
+        const res = await fetch(`http://${this.IP}:${this.PORT}/repos/${repoId}/graphs`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        })
+        return await res.json()
     }
 
     async getVideoSummary(repoid: number, path : string){

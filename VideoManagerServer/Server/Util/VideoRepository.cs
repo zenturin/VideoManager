@@ -134,6 +134,57 @@ namespace VideoManager
             return info;
         }
 
+        public async Task<RepoGraphData> GetGraphData()
+        {
+            var semaphore = new SemaphoreSlim(4);
+            var tasks = Videos.Select(async v => {
+                await semaphore.WaitAsync();
+                try { return await v.Info(); }
+                finally { semaphore.Release(); }
+            });
+            var infos = (await Task.WhenAll(tasks)).Where(v => v != null).ToArray();
+            
+
+            // Duration buckets (in minutes)
+            var durationBucketDefs = new (string Label, double MinSec, double MaxSec)[]
+            {
+                ("0-2 min",   0,    120),
+                ("2-5 min",   120,  300),
+                ("5-10 min",  300,  600),
+                ("10-20 min", 600,  1200),
+                ("20-30 min", 1200, 1800),
+                ("30+ min",   1800, double.MaxValue),
+            };
+            var durationHistogram = durationBucketDefs.Select(b => new HistogramBucket(
+                b.Label,
+                infos.Count(i => i != null && i.Duration.TotalSeconds >= b.MinSec && i.Duration.TotalSeconds < b.MaxSec)
+            )).ToArray();
+
+            // Size buckets (in bytes)
+            var sizeBucketDefs = new (string Label, long MinBytes, long MaxBytes)[]
+            {
+                ("0-100 MB",    0,                    100L * 1024 * 1024),
+                ("100-500 MB",  100L * 1024 * 1024,   500L * 1024 * 1024),
+                ("500MB-1 GB",  500L * 1024 * 1024,   1024L * 1024 * 1024),
+                ("1-2 GB",      1024L * 1024 * 1024,  2048L * 1024 * 1024),
+                ("2+ GB",       2048L * 1024 * 1024,  long.MaxValue),
+            };
+            var sizeHistogram = sizeBucketDefs.Select(b => new HistogramBucket(
+                b.Label,
+                infos.Count(i => i != null && i.Size >= b.MinBytes && i.Size < b.MaxBytes)
+            )).ToArray();
+
+            // Year buckets
+            var yearHistogram = infos
+                .Where(i => i != null && i.CreationTime.HasValue)
+                .GroupBy(i => i!.CreationTime!.Value.Year)
+                .OrderBy(g => g.Key)
+                .Select(g => new HistogramBucket(g.Key.ToString(), g.Count()))
+                .ToArray();
+
+            return new RepoGraphData(durationHistogram, sizeHistogram, yearHistogram);
+        }
+
         public async Task<Video> GetVideo(string path)
         {
             Video? video;
@@ -163,5 +214,12 @@ namespace VideoManager
             this.creationDate = creationDate;
         }
     }
+
+    public record HistogramBucket(string Bucket, int Count);
+    public record RepoGraphData(
+        HistogramBucket[] DurationHistogram,
+        HistogramBucket[] SizeHistogram,
+        HistogramBucket[] YearHistogram
+    );
 }
 

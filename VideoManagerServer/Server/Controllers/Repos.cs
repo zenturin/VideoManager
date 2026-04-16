@@ -52,6 +52,14 @@ public class ReposController : ControllerBase
         var img = await video.GetThumbnail();
         return File(img  ,"image/png");
     }
+    [HttpGet("{repoIdString}/graphs")]
+    public async Task<string> GetRepoGraphs(string repoIdString)
+    {
+        if (!int.TryParse(repoIdString, out int repoId)) return "{}";
+        var graphs = await Repos.repos[repoId].GetGraphData();
+        return JsonSerializer.Serialize(graphs);
+    }
+
     [HttpGet("{repoIdString}/tree")]
     public async Task<string> GetTree(string repoIdString)
     {
