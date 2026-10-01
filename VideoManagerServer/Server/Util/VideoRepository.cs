@@ -126,7 +126,7 @@ namespace VideoManager
             }
 
             VideoInfo info = new VideoInfo(
-                path.Split("/").Last(),
+                path.Split("\\").Last(),
                 rawInfo.Size.ToString(),
                 rawInfo.Duration.ToString(),
                 rawInfo.CreationTime.ToString()
